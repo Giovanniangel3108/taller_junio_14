@@ -1,51 +1,112 @@
 package org.example
 
-fun main(){
+
+
+import kotlin.math.PI
+import kotlin.math.sqrt
+
+fun main() {
+    val squareCabin = SquareCabin(6, 50.0)
+    val roundHut = RoundHut(3, 10.0)
+    val roundTower = RoundTower(4, 15.5)
+
+    with(squareCabin) {
+        println("\nSquare Cabin\n============")
+        println("Capacity: ${capacity}")
+        println("Material: ${buildingMaterial}")
+        println("Floor area: ${floorArea()}")
+    }
+
+    with(roundHut) {
+        println("\nRound Hut\n=========")
+        println("Material: ${buildingMaterial}")
+        println("Capacity: ${capacity}")
+        println("Floor area: ${floorArea()}")
+        println("Has room? ${hasRoom()}")
+        getRoom()
+        println("Has room? ${hasRoom()}")
+        getRoom()
+        println("Carpet size: ${calculateMaxCarpetLength()}")
+    }
+
+    with(roundTower) {
+        println("\nRound Tower\n==========")
+        println("Material: ${buildingMaterial}")
+        println("Capacity: ${capacity}")
+        println("Floor area: ${floorArea()}")
+        println("Carpet Length: ${calculateMaxCarpetLength()}")
+    }
+}
+
+abstract class Dwelling(private var residents: Int) {
+    abstract val buildingMaterial: String
+    abstract val capacity: Int
+
+
+    abstract fun floorArea(): Double
+
+
+    fun hasRoom(): Boolean {
+        return residents < capacity
+    }
+
+
+    fun getRoom() {
+        if (capacity > residents) {
+            residents++
+            println("You got a room!")
+        } else {
+            println("Sorry, at capacity and no rooms left.")
+        }
+    }
 
 }
-/*fun main() {
-    val trafficLightColor = "Amber"
-
-    val message = when(trafficLightColor) {
-        "Red" -> "Stop"
-        "Yellow", "Amber" -> "Proceed with caution."
-        "Green" -> "Go"
-        else -> "Invalid traffic-light color"
-    }
-    println(message)*/
 
 
-/*fun main() {
-    val x: Any = 20
+class SquareCabin(residents: Int, val length: Double) : Dwelling(residents) {
+    override val buildingMaterial = "Wood"
+    override val capacity = 6
 
-    when (x) {
-        2, 3, 5, 7 -> println("x is a prime number between 1 and 10.")
-        in 1..10 -> println("x is a number between 1 and 10, but not a prime number.")
-        is Int -> println("x is an integer number, but not between 1 and 10.")
-        else -> println("x isn't an integer number.")
-    }
-}*/
-/*fun main() {
-    val trafficLightColor = "Black"
 
-    if (trafficLightColor == "Red") {
-        println("Stop")
-    } else if (trafficLightColor == "Yellow") {
-        println("Slow")
-    } else if (trafficLightColor == "Green") {
-        println("Go")
-    } else {
-        println("Invalid traffic-light color")
+    override fun floorArea(): Double {
+        return length * length
     }
 
-}*/
-/*fun main() {
-    val trafficLightColor = "Amber"
+}
 
-    when (trafficLightColor) {
-        "Red" -> println("Stop")
-        "Yellow", "Amber" -> println("Slow")
-        "Green" -> println("Go")
-        else -> println("Invalid traffic-light color")
+
+open class RoundHut(
+    residents: Int, val radius: Double) : Dwelling(residents) {
+
+    override val buildingMaterial = "Straw"
+    override val capacity = 4
+
+
+    override fun floorArea(): Double {
+        return PI * radius * radius
     }
-}*/
+
+
+    fun calculateMaxCarpetLength(): Double {
+        return sqrt(2.0) * radius
+    }
+
+}
+
+
+class RoundTower(
+    residents: Int,
+    radius: Double,
+    val floors: Int = 2) : RoundHut(residents, radius) {
+
+    override val buildingMaterial = "Stone"
+
+    // Capacity depends on the number of floors.
+    override val capacity = floors * 4
+
+
+    override fun floorArea(): Double {
+        return super.floorArea() * floors
+    }
+}
+
